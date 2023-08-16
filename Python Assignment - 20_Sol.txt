@@ -1,0 +1,377 @@
+Python Assignment - 20
+
+1. Set the variable test1 to the string 'This is a test of the emergency text system' and save test1 to a
+   file named test.txt.
+
+Sol:  I'm a text-based AI and cannot directly perform actions on your local system, such as creating files. I can provide you with the code snippet 
+      we need to achieve this in a programming language like Python. 
+
+      Eg -  test1 = 'This is a test of the emergency text system.'
+            with open('test.txt', 'w') as file:
+            file.write(test1)
+
+    Copy and paste this code into a Python script or interpreter, and it will create a file named "test.txt" with the specified text content. 
+    Just make sure we have the necessary permissions to write files in the directory where you run the script.
+
+2. Read the contents of the file test.txt into the variable test2. Is there a difference between test 1
+   and test 2?
+
+Sol: We can read the contents of the "test.txt" file into the variable test2 and then compare the contents of test1 and test2:-
+
+    Eg - with open('test.txt', 'r') as file:
+         test2 = file.read()
+
+     # Compare test1 and test2
+     if test1 == test2:
+       print("test1 and test2 have the same content.")
+     else:
+       print("test1 and test2 have different content.")
+
+This code snippet will read the contents of the "test.txt" file into the test2 variable and then compare it with the content of test1.
+ If they have the same content, it will print that they are the same; otherwise, it will print that they are different.
+
+
+3. Create a CSV file called books.csv by using these lines:
+title,author,year
+The Weirdstone of Brisingamen,Alan Garner,1960
+Perdido Street Station,China Miéville,2000
+Thud!,Terry Pratchett,2005
+The Spellman Files,Lisa Lutz,2007
+Small Gods,Terry Pratchett,1992
+
+
+Sol: To create and save this content into a file named "books.csv" using Python, you can use the following code:-
+
+csv_content = """title,author,year
+The Weirdstone of Brisingamen,Alan Garner,1960
+Perdido Street Station,China Miéville,2000
+Thud!,Terry Pratchett,2005
+The Spellman Files,Lisa Lutz,2007
+Small Gods,Terry Pratchett,1992
+"""
+
+with open('books.csv', 'w') as file:
+    file.write(csv_content)
+
+print("File 'books.csv' has been created.")
+
+It will create the "books.csv" file with the provided content. Make sure you have the necessary permissions to write files in the 
+directory where you run the script.
+
+
+4. Use the sqlite3 module to create a SQLite database called books.db, and a table called books with
+   these fields: title (text), author (text), and year (integer).
+
+Sol: We can use the sqlite3 module in Python to create an SQLite database called "books.db" and a table called "books" with the specified fields:-
+
+   Eg - import sqlite3
+
+# Connect to the SQLite database (creates the file if it doesn't exist)
+connection = sqlite3.connect('books.db')
+
+# Create a cursor object to interact with the database
+cursor = connection.cursor()
+
+# Define the CREATE TABLE query
+create_table_query = '''
+CREATE TABLE IF NOT EXISTS books (
+    id INTEGER PRIMARY KEY,
+    title TEXT,
+    author TEXT,
+    year INTEGER
+)
+'''
+
+# Execute the CREATE TABLE query
+cursor.execute(create_table_query)
+
+# Commit the changes and close the connection
+connection.commit()
+connection.close()
+
+print("SQLite database 'books.db' and table 'books' have been created.")
+
+
+ It will create the "books.db" database file and the "books" table with the specified fields. If the database and table already exist,
+ the script will not create duplicates. Make sure you have the necessary permissions to write files in the directory where you run the script.
+
+
+5. Read books.csv and insert its data into the book table.
+
+Sol: We can use the csv module to read the data from the "books.csv" file and then use the sqlite3 module to insert the data into the 
+     "books" table in the SQLite database. Here's how you can do it:-
+
+
+   Eg - import csv
+import sqlite3
+
+# Connect to the SQLite database
+connection = sqlite3.connect('books.db')
+cursor = connection.cursor()
+
+# Read data from the CSV file and insert into the table
+with open('books.csv', 'r') as csv_file:
+    csv_reader = csv.reader(csv_file)
+    # Skip the header row
+    next(csv_reader)
+    for row in csv_reader:
+        title, author, year = row
+        cursor.execute('INSERT INTO books (title, author, year) VALUES (?, ?, ?)', (title, author, int(year)))
+
+# Commit the changes and close the connection
+connection.commit()
+connection.close()
+
+print("Data from 'books.csv' has been inserted into the 'books' table.")
+
+
+ We have the "books.csv" file in the same directory as the script, and the "books.db" database file created using the previous code snippet.
+ When we run this script, it will read the data from the CSV file and insert it into the "books" table in the SQLite database.
+
+
+
+6.  Select and print the title column from the book table in alphabetical order.
+
+Sol: We can use the sqlite3 module to select and print the title column from the books table in alphabetical order:-
+
+    Eg - import sqlite3
+
+# Connect to the SQLite database
+connection = sqlite3.connect('books.db')
+cursor = connection.cursor()
+
+# Select and print the title column in alphabetical order
+select_query = 'SELECT title FROM books ORDER BY title ASC'
+cursor.execute(select_query)
+
+titles = cursor.fetchall()
+
+for title in titles:
+    print(title[0])
+
+# Close the connection
+connection.close()
+
+
+This code will retrieve the title column from the books table, order the results in ascending alphabetical order, and then print each title. 
+Make sure you have the "books.db" database file with the "books" table created and populated as described earlier.
+
+
+
+7. From the book table, select and print all columns in the order of publication.
+
+Sol: To select and print all columns from the books table in the order of publication (year), you can modify the code like this:-
+
+
+    Eg - import sqlite3
+
+# Connect to the SQLite database
+connection = sqlite3.connect('books.db')
+cursor = connection.cursor()
+
+# Select and print all columns in the order of publication (year)
+select_query = 'SELECT * FROM books ORDER BY year ASC'
+cursor.execute(select_query)
+
+books = cursor.fetchall()
+
+for book in books:
+    print("Title:", book[1])
+    print("Author:", book[2])
+    print("Year:", book[3])
+    print()
+
+# Close the connection
+connection.close()
+
+
+This code will retrieve all columns from the books table, order the results in ascending order of publication (year), and then print each book's details (title, author, and year). Make sure you have the "books.db" database file with the "books" table created and populated as described earlier.
+
+
+8. Use the sqlalchemy module to connect to the sqlite3 database books.db that you just made in
+   exercise 6.
+
+Sol: We can use the sqlalchemy module to connect to the "books.db" SQLite database:-
+
+   Eg - from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+# Create a SQLAlchemy engine to connect to the database
+engine = create_engine('sqlite:///books.db')  # Use 'sqlite:///' to indicate a relative path
+
+# Create a Session class to interact with the database
+Session = sessionmaker(bind=engine)
+session = Session()
+
+# Example: Select and print all columns in the order of publication (year)
+books = session.execute('SELECT * FROM books ORDER BY year ASC')
+
+for book in books:
+    print("Title:", book.title)
+    print("Author:", book.author)
+    print("Year:", book.year)
+    print()
+
+# Close the session
+session.close()
+
+Assumes you have defined a SQLAlchemy model class named Book that corresponds to the books table. This model class would typically be defined using the declarative_base() function from SQLAlchemy's declarative module. You would need to create this model class before you can execute the above code. Here's an example of how you could define the Book model class:-
+
+  Eg - from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
+
+class Book(Base):
+    __tablename__ = 'books'
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String)
+    author = Column(String)
+    year = Column(Integer)
+
+
+
+ We have the necessary packages installed (sqlalchemy) and that you have the "books.db" database file with the "books" table created
+ and populated as described earlier.
+
+
+9. Install the Redis server and the Python redis library (pip install redis) on your computer. Create a
+Redis hash called test with the fields count (1) and name (&#39;Fester Bestertester&#39;). Print all the fields for
+test.
+
+Sol: To achieve this, please follow these steps:-
+
+ 1. Install Redis:
+
+    We can download and install Redis from the official website: https://redis.io/download
+
+    Follow the installation instructions provided for your operating system.
+
+2. Install the Python Redis Library:
+
+   We can install the Redis library using the following command:-
+
+   pip install redis
+
+3. Create a Redis Hash and Retrieve Fields:
+
+   Once we have Redis and the Python Redis library installed, you can create a Redis hash and retrieve its fields using the following Python code:-
+
+  Eg - import redis
+
+# Connect to the local Redis server
+redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
+
+# Create a Redis hash
+redis_client.hset('test', 'count', 1)
+redis_client.hset('test', 'name', 'Fester Bestertester')
+
+# Retrieve all fields for 'test' hash
+all_fields = redis_client.hgetall('test')
+
+# Print the fields
+for field, value in all_fields.items():
+    print(f"{field.decode('utf-8')}: {value.decode('utf-8')}")
+
+
+
+10. Increment the count field of test and print it.
+
+Sol: We can use the hincrby function from the Python Redis library to increment the value of the count field in the test hash and then 
+     print the updated count. Here's how you can do it:-
+
+   Eg - import redis
+
+# Connect to the local Redis server
+redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
+
+# Increment the 'count' field by 1
+new_count = redis_client.hincrby('test', 'count', 1)
+
+# Print the updated count
+print(f"Updated Count: {new_count}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
